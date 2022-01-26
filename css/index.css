@@ -1,0 +1,48 @@
+.container {
+    width: 200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.container form {
+    width: 100%;
+    text-align: center;
+}
+
+.container form div {
+    margin-bottom: 15px;
+    color: #616161;
+}
+
+.container form input {
+    line-height: 2em;
+    font-size: 1.3em;
+    border: 1px solid #03398e;
+    border-radius: 5px;
+    color: #616161;
+    padding: 0 7px;
+}
+
+.container form input[type="text"] {
+    width: 100%;
+
+}
+
+.container form input:focus {
+    outline: none;
+}
+
+.container form button {
+    color: #616161;
+    width: 70%;
+    font-size: 0.9em;
+    border: 1px solid #03398e;
+    border-radius: 5px;
+    padding: 7px 15px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.container form button:hover {
+    background-color: #e8e8e8;
+}

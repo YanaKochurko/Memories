@@ -1,0 +1,12 @@
+.container {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.container canvas {
+    cursor: pointer;
+}
+
+.container div {
+    margin-bottom: 20px;
+}
