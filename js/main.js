@@ -19,8 +19,7 @@ let cards = [];
 let game = false;
 let timePassed = 0;
 let turns = 0;
-let cardsUncovered;
-let testing = (findGetParameter("name") === "tester") ? 1 : 0;
+let cardsCovered;
 let timer;
 let drawing;
 
@@ -32,7 +31,7 @@ function main() {
 
     drawing = setInterval(() => {
         draw();
-    }, 200);
+    }, 1);
 
     let cardOpened = null;
     let timeOut = false;
@@ -48,14 +47,14 @@ function main() {
             timer = startTimer();
         }
 
-        let card = drawFace(e.offsetX, e.offsetY);
+        let card = findCard(e.offsetX, e.offsetY);
         card.opened = true;
         if (cardOpened != null && cardOpened.type === card.type && cardOpened !== card) {
             cardOpened.uncovered = true;
             card.uncovered = true;
             cardOpened = null;
             turns++;
-            cardsUncovered -= 2;
+            cardsCovered -= 2;
             winCheck();
         }
         else if (cardOpened == null) {
@@ -66,8 +65,8 @@ function main() {
             timeOut = true;
             setTimeout(() => {
                 cardOpened.opened = false;
-                cardOpened = null;
                 card.opened = false;
+                cardOpened = null;
                 timeOut = false;
             }, 700);
         }
@@ -110,7 +109,7 @@ function init() {
         window.location = "index.html";
     }
 
-    cardsUncovered = cardsAmount;
+    cardsCovered = cardsAmount;
 
     container.style.width = canv.width + 300 + "px";
 }
@@ -133,9 +132,8 @@ function generateCards() {
 }
 
 function shuffleCards() {
-    let rowSize = Math.sqrt(cardsAmount);
     for (let j = 0; j < 10; j++) {
-        for (let i = 0; i < rowSize; i++) {
+        for (let i = 0; i < cards.length; i++) {
             let el = cards[Math.floor(Math.random() * cards.length)];
             let tempR = cards[i].row;
             let tempC = cards[i].col;
@@ -171,13 +169,13 @@ function draw() {
             }
         }
 
-        if (card.uncovered || card.opened || testing) {
+        if (card.uncovered || card.opened) {
             drawFace(x, y);
         }
     });
 }
 
-function drawFace(x, y) {
+function findCard(x, y) {
     let row = Math.floor(y / CARD_HEIGHT);
     let col = Math.floor(x / CARD_WIDTH);
 
@@ -189,35 +187,29 @@ function drawFace(x, y) {
         }
     }
 
+    return card;
+}
+
+function drawFace(x, y) {
+    let card = findCard(x, y);
     if (card !== null) {
         let fontSize = CARD_HEIGHT / 3;
         ctx.font = fontSize + "px Arial";
 
-        let drawX = col * CARD_WIDTH;
-        let drawY = row * CARD_HEIGHT;
-
-        if (((card.row % 2 === 0 && card.col % 2 === 0) || (card.row % 2 !== 0 && card.col % 2 !== 0)) && !card.uncovered) {
-            drawRectangle(drawX, drawY, CARD_WIDTH, CARD_HEIGHT, "#4d4d4d");
-        }
-        else if (!card.uncovered) {
-            drawRectangle(drawX, drawY, CARD_WIDTH, CARD_HEIGHT, "#d4d4d4");
-        }
+        let drawX = card.col * CARD_WIDTH;
+        let drawY = card.row * CARD_HEIGHT;
 
         ctx.fillStyle = "#8659ff";
-        if (testing && (card.opened || card.uncovered)) {
-            ctx.fillStyle = "#fcba03";
-        }
-
         if (card.uncovered) {
             ctx.fillStyle = "#00c417";
         }
-        ctx.fillText(card.type + 1, drawX + CARD_WIDTH / 2 - fontSize / 2, drawY + fontSize + CARD_HEIGHT / 4);
+        ctx.fillText(card.type + 1, drawX + CARD_WIDTH / 2 - fontSize / 3, drawY + fontSize + CARD_HEIGHT / 4);
     }
     return card;
 }
 
 function winCheck() {
-    if (cardsUncovered === 0) {
+    if (cardsCovered === 0) {
         clearInterval(timer);
         setTimeout(() => {
             clearInterval(drawing);

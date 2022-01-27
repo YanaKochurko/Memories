@@ -8,33 +8,27 @@ function main() {
 
 function processLeaderTableRecord(key, difficulty) {
     let name = key;
-    console.log(window.localStorage.getItem(name));
     let data = JSON.parse(window.localStorage.getItem(name));
-
-    console.log(+data.difficulty + " + " + difficulty);
 
     if (+data.difficulty !== +difficulty) {
         return;
     }
 
-    let tr = document.createElement("tr");
-    let nameTd = document.createElement("td");
-    nameTd.innerHTML = name;
-    let timeTd = document.createElement("td");
-    timeTd.innerHTML = data.timePassed;
-    let movesTd = document.createElement("td");
-    movesTd.innerHTML = data.turns;
-
-    tr.appendChild(nameTd);
-    tr.appendChild(timeTd);
-    tr.appendChild(movesTd);
-
     const table = document.getElementById("leadersTable");
-    table.appendChild(tr);
+    const tbody = table.getElementsByTagName('tbody')[0];
+    let newRow = tbody.insertRow();
+    let nameCell = newRow.insertCell();
+    nameCell.innerHTML = name;
+    let timeCell = newRow.insertCell();
+    timeCell.innerHTML = data.timePassed;
+    let movesCell = newRow.insertCell();
+    movesCell.innerHTML = data.turns;
 }
 
 function highlightName(name) {
-    document.getElementById("leadersTable")
+    document
+        .getElementById("leadersTable")
+        .getElementsByTagName("tbody")[0]
         .childNodes
         .forEach(tr => {
             tr.childNodes.forEach(td => {
