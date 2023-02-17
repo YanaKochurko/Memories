@@ -222,7 +222,7 @@ function winCheck() {
 
 function sendData(record) {
     let request = new XMLHttpRequest();
-    request.open("POST", "https://memories-b055.restdb.io/rest/memories-players");
+    request.open("POST", "https://memories-b055.restdb.io/rest/memories-players", false);
     request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader("x-apikey", "638b381dc890f30a8fd1f6f5");
     request.send(JSON.stringify(record));
