@@ -156,8 +156,9 @@ function draw() {
             }
         }
 
-        drawFace(x, y);
+        
         if (card.uncovered || card.opened) {
+	    drawFace(x, y);
         }
     });
 }
