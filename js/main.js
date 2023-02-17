@@ -84,30 +84,17 @@ function init() {
     cardsAmount = 0;
 
     if (config.difficulty === 0) {
-        let sq = Math.sqrt(CARDS_AMOUNT_EASY);
-        canv.width = CARD_WIDTH * sq;
-        canv.height = CARD_HEIGHT * sq;
-
         cardsAmount = CARDS_AMOUNT_EASY;
     }
     else if (config.difficulty === 1) {
-        let sq = Math.sqrt(CARDS_AMOUNT_MEDIUM);
-        canv.width = CARD_WIDTH * sq;
-        canv.height = CARD_HEIGHT * sq;
-
         cardsAmount = CARDS_AMOUNT_MEDIUM
     }
     else if (config.difficulty === 2) {
-        let sq = Math.sqrt(CARDS_AMOUNT_HARD);
-        canv.width = CARD_WIDTH * sq;
-        canv.height = CARD_HEIGHT * sq;
-
         cardsAmount = CARDS_AMOUNT_HARD;
     }
-    else {
-        alert("Не ломайте игру");
-        window.location = "index.html";
-    }
+
+    canv.width = CARD_WIDTH * Math.sqrt(cardsAmount);
+    canv.height = CARD_HEIGHT * Math.sqrt(cardsAmount);
 
     cardsCovered = cardsAmount;
 
@@ -169,8 +156,8 @@ function draw() {
             }
         }
 
+        drawFace(x, y);
         if (card.uncovered || card.opened) {
-            drawFace(x, y);
         }
     });
 }
@@ -220,26 +207,24 @@ function winCheck() {
         let record = {
             difficulty: config.difficulty,
             timePassed: timePassed,
-            turns: turns
+            turns: turns,
+            name: config.name
         }
 
-        if (window.localStorage.getItem(config.name) !== null) {
-            for (let i = 1; i < 1000000000; i++) {
-                if (window.localStorage.getItem(config.name + " (" + i + ")") == null) {
-                    window.localStorage.setItem(config.name + " (" + i + ")", JSON.stringify(record));
-                    name = config.name + " (" + i + ")";
-                    break;
-                }
-            }
-        }
-        else {
-            window.localStorage.setItem(config.name, JSON.stringify(record));
-        }
+        sendData(record);
 
         setTimeout(() => {
             window.location = "scores.html?name=" + name + "&difficulty=" + config.difficulty;
         }, 500);
     }
+}
+
+function sendData(record) {
+    let request = new XMLHttpRequest();
+    request.open("POST", "https://memories-b055.restdb.io/rest/memories-players");
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("x-apikey", "638b381dc890f30a8fd1f6f5");
+    request.send(JSON.stringify(record));
 }
 
 function drawRectangle(x, y, width, height, color) {
